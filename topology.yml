@@ -10,7 +10,7 @@ hosts:
     base_box:
       image: Ubuntu-22.04
       mgmt_user: ubuntu
-    flavor: standard.small
+    flavor: standard.medium
 
   - name: client
     base_box:
