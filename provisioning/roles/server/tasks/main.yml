@@ -1,0 +1,101 @@
+- name: Add the user 'admin' with a bash shell to the user's groups
+  user:
+      name: admin
+      password: "{{ 'admin' | password_hash('sha512') }}"
+      create_home: yes
+      shell: /bin/bash
+
+- name: Adding aliases
+  loop: "{{ aliases | dict2items }}"
+  lineinfile:
+      path: /etc/hosts
+      line: "{{ item.value }} {{ item.key }}"
+
+- name: copy invoices2019.zip
+  copy:
+      src: ../files/invoices2019.zip
+      dest: /home/admin/invoices2019.zip
+      owner: admin
+      mode: '640'
+
+- name: copy Croatia 2019
+  copy:
+      src: ../files/Croatia 2019/
+      dest: /home/admin/Croatia 2019/
+      owner: admin
+      mode: '640'
+
+- name: copy Italy 2018
+  copy:
+      src: ../files/Italy 2018/
+      dest: /home/admin/Italy 2018/
+      owner: admin
+      mode: '640'
+
+- name: copy Mydata file
+  copy:
+      src: ../files/Mydata.xlsx
+      dest: /home/admin/Mydata.xlsx
+      owner: admin
+      mode: '640'
+
+- name: copy Romeo-and-Juliet file
+  copy:
+      src: ../files/Romeo-and-Juliet.pdf
+      dest: /home/admin/Romeo-and-Juliet.pdf
+      owner: admin
+      mode: '640'
+
+- name: copy Treasure-Island.pdf file
+  copy:
+      src: ../files/Treasure-Island.pdf
+      dest: /home/admin/Treasure-Island.pdf
+      owner: admin
+      mode: '640'
+
+- name: install nfs server
+  action: apt pkg=nfs-kernel-server state=present update_cache=yes
+  tags:
+    - nfs
+
+- name: ensure nfs service is running (Ubuntu)
+  action: service name={{item}} state=started
+  tags:
+    - nfs
+  with_items:
+    - nfs-kernel-server
+
+- name: install pip3
+  apt:
+    name: python3-pip
+
+- name: install git
+  apt:
+    name: git
+
+- name: install curl
+  apt:
+    name: curl
+  
+- name: Install metarget
+  become: yes
+  shell: |
+    git clone https://github.com/brant-ruan/metarget.git
+    cd metarget/
+    pip3 install -r requirements.txt
+
+- name: Create docker metarget
+  become: yes
+  shell: ./metarget gadget install docker --version 18.03.1
+  args:
+    chdir: /home/ubuntu/metarget
+
+- name: Install and run docker metasploitable2
+  become: yes
+  shell: |
+    docker pull cyberacademylabs/metasploitable2:latest
+    docker run -d --name metasploitable2 --network host cyberacademylabs/metasploitable2:latest
+  
+- name: Wait for metasploitable2 web
+  wait_for:
+    port: 80
