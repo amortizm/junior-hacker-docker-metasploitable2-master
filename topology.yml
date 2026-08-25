@@ -1,12 +1,11 @@
 name: junior-hacker-docker-metasploitable2
-
 hosts:
   - name: attacker
     base_box: 
       image: kali
       mgmt_user: debian
     flavor: standard.medium
-
+    
   - name: server
     base_box:
       image: Ubuntu-22.04
