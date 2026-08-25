@@ -1,7 +1,7 @@
 name: junior-hacker-docker-metasploitable2
 hosts:
   - name: attacker
-    base_box: 
+    base_box:
       image: kali
       mgmt_user: debian
     flavor: standard.medium
@@ -13,15 +13,15 @@ hosts:
     flavor: standard.small
 
   - name: client
-    base_box: 
-      image: 	debian-12-x86_64
+    base_box:
+      image: debian-12-x86_64
       mgmt_user: debian
     flavor: standard.small
 
 routers:
   - name: router
     base_box:
-      image: 	debian-12-x86_64
+      image: debian-12-x86_64
       mgmt_user: debian
     flavor: standard.small
 
