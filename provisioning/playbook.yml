@@ -61,4 +61,4 @@
   become: yes
   become_user: root
   roles:
-    - role: sandbox-logging-msf
+    - role: sandbox-logging-msf-fixed
