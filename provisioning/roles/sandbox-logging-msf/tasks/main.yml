@@ -1,0 +1,2 @@
+# Tareas corregidas para compatibilidad con Ansible moderno
+- include_tasks: rsyslog.yml
